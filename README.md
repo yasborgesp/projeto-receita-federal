@@ -18,7 +18,7 @@
 
 ## 📌 Sobre o Projeto
 
-O **SIAT** é um projeto acadêmico desenvolvido para a disciplina de **Desenvolvimento Rápido de Aplicações em Python** no **Centro Universitário UniFatecie — Paranavaí/PR**.
+O **SIAT** é um projeto acadêmico desenvolvido para a disciplina de **Desenvolvimento Rápido de Aplicações em Python**.
 
 O sistema foi desenvolvido com foco em produtividade e velocidade de entrega, utilizando o microframework **Flask** em conjunto com **SQLAlchemy ORM**, banco de dados **SQLite** e consumo de **API pública da Receita Federal** via BrasilAPI. O frontend foi construído com **HTML5, CSS3 e JavaScript puro**, sem frameworks externos.
 
