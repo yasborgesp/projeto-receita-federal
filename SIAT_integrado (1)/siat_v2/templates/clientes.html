@@ -1,0 +1,88 @@
+{# templates/clientes.html #}
+{% extends "base.html" %}
+{% block title %}Clientes{% endblock %}
+{% block page_title %}Clientes{% endblock %}
+{% block content %}
+<div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+  <div><h1>👥 Clientes</h1><p>Gerencie os clientes do escritório</p></div>
+  <button class="btn btn-primary" onclick="openModal('modal-cliente')">+ Novo Cliente</button>
+</div>
+
+<div class="card" style="padding:12px 16px">
+  <form method="GET" style="display:flex;gap:10px">
+    <div class="search-bar" style="flex:1">
+      <input type="text" name="q" value="{{ q }}" placeholder="Pesquisar clientes...">
+      <button type="submit">🔍</button>
+    </div>
+  </form>
+</div>
+
+<div class="table-card">
+  <div class="table-card-header">
+    <h3>Clientes Cadastrados ({{ clientes|length }})</h3>
+  </div>
+  <div class="table-wrapper">
+    <table id="main-table">
+      <thead><tr><th>Nome</th><th>CPF</th><th>E-mail</th><th>Telefone</th><th>Situação</th><th>Ações</th></tr></thead>
+      <tbody>
+        {% for c in clientes %}
+        <tr>
+          <td>{{ c.nome }}</td>
+          <td style="font-family:monospace">{{ c.cpf or '—' }}</td>
+          <td>{{ c.email or '—' }}</td>
+          <td>{{ c.telefone or '—' }}</td>
+          <td><span class="badge {{ 'badge-green' if c.situacao=='Ativo' else 'badge-gray' }}">{{ c.situacao }}</span></td>
+          <td>
+            <form method="POST" action="{{ url_for('clientes.deletar', id=c.id) }}" style="display:inline" onsubmit="return confirm('Excluir?')">
+              <button class="btn btn-danger btn-sm">🗑</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:28px">Nenhum cliente cadastrado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="modal-cliente" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Cadastrar Cliente</h2>
+      <button class="modal-close" onclick="closeModal('modal-cliente')">✕</button>
+    </div>
+    <form method="POST" action="{{ url_for('clientes.cadastrar') }}">
+      <div class="form-grid">
+        <div class="field-group" style="grid-column:1/-1">
+          <label class="field-label">Nome *</label>
+          <input type="text" name="nome" class="field-input" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">CPF</label>
+          <input type="text" name="cpf" class="field-input" data-mask="cpf" maxlength="14">
+        </div>
+        <div class="field-group">
+          <label class="field-label">E-mail</label>
+          <input type="email" name="email" class="field-input">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Telefone</label>
+          <input type="text" name="telefone" class="field-input" data-mask="tel" maxlength="15">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Situação</label>
+          <select name="situacao" class="field-select">
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-cliente')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

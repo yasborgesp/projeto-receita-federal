@@ -1,0 +1,101 @@
+{# templates/financeiro.html #}
+{% extends "base.html" %}
+{% block title %}Financeiro{% endblock %}
+{% block page_title %}Financeiro{% endblock %}
+{% block content %}
+<div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+  <div><h1>💰 Financeiro</h1><p>Controle de receitas, despesas e pendências</p></div>
+  <button class="btn btn-primary" onclick="openModal('modal-lancamento')">+ Lançamento</button>
+</div>
+
+<div class="fin-metrics">
+  <div class="fin-card">
+    <div class="fin-label">Total Receitas</div>
+    <div class="fin-value fin-green">R$ {{ "%.2f"|format(receitas) }}</div>
+  </div>
+  <div class="fin-card">
+    <div class="fin-label">Total Despesas</div>
+    <div class="fin-value fin-red">R$ {{ "%.2f"|format(despesas) }}</div>
+  </div>
+  <div class="fin-card">
+    <div class="fin-label">Saldo</div>
+    <div class="fin-value {{ 'fin-green' if (receitas - despesas) >= 0 else 'fin-red' }}">
+      R$ {{ "%.2f"|format(receitas - despesas) }}
+    </div>
+  </div>
+  <div class="fin-card">
+    <div class="fin-label">Pendências</div>
+    <div class="fin-value fin-yellow">R$ {{ "%.2f"|format(pendentes) }}</div>
+  </div>
+</div>
+
+<div class="table-card">
+  <div class="table-card-header"><h3>Lançamentos</h3></div>
+  <div class="table-wrapper">
+    <table id="main-table">
+      <thead><tr><th>Descrição</th><th>Tipo</th><th>Valor</th><th>Status</th><th>Vencimento</th><th>Ações</th></tr></thead>
+      <tbody>
+        {% for l in lancamentos %}
+        <tr>
+          <td>{{ l.descricao }}</td>
+          <td><span class="badge {{ 'badge-green' if l.tipo=='Receita' else 'badge-red' }}">{{ l.tipo }}</span></td>
+          <td style="font-weight:600">R$ {{ "%.2f"|format(l.valor) }}</td>
+          <td><span class="badge {{ 'badge-green' if l.status=='Pago' else 'badge-yellow' }}">{{ l.status }}</span></td>
+          <td>{{ l.vencimento.strftime('%d/%m/%Y') if l.vencimento else '—' }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('financeiro.deletar', id=l.id) }}" style="display:inline" onsubmit="return confirm('Excluir?')">
+              <button class="btn btn-danger btn-sm">🗑</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:28px">Nenhum lançamento ainda.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="modal-lancamento" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Novo Lançamento</h2>
+      <button class="modal-close" onclick="closeModal('modal-lancamento')">✕</button>
+    </div>
+    <form method="POST" action="{{ url_for('financeiro.cadastrar') }}">
+      <div class="form-grid">
+        <div class="field-group" style="grid-column:1/-1">
+          <label class="field-label">Descrição *</label>
+          <input type="text" name="descricao" class="field-input" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Tipo</label>
+          <select name="tipo" class="field-select">
+            <option value="Receita">Receita</option>
+            <option value="Despesa">Despesa</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Valor (R$)</label>
+          <input type="number" name="valor" class="field-input" step="0.01" min="0" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Status</label>
+          <select name="status" class="field-select">
+            <option value="Pendente">Pendente</option>
+            <option value="Pago">Pago</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Vencimento</label>
+          <input type="date" name="vencimento" class="field-input">
+        </div>
+      </div>
+      <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-lancamento')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

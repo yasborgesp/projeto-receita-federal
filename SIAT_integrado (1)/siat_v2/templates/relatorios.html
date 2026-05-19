@@ -1,0 +1,46 @@
+{# templates/relatorios.html #}
+{% extends "base.html" %}
+{% block title %}Relatórios{% endblock %}
+{% block page_title %}Relatórios{% endblock %}
+{% block content %}
+<div class="page-header"><h1>📈 Relatórios</h1><p>Indicadores e resumos do sistema</p></div>
+
+<div class="cards-grid">
+  <div class="stat-card"><div class="stat-icon si-blue">🏢</div><div class="stat-info"><div class="stat-value">{{ empresas_total }}</div><div class="stat-label">Total Empresas</div></div></div>
+  <div class="stat-card"><div class="stat-icon si-green">✅</div><div class="stat-info"><div class="stat-value">{{ empresas_ativas }}</div><div class="stat-label">Empresas Ativas</div></div></div>
+  <div class="stat-card"><div class="stat-icon si-teal">🔍</div><div class="stat-info"><div class="stat-value">{{ consultas_total }}</div><div class="stat-label">Consultas</div></div></div>
+  <div class="stat-card"><div class="stat-icon si-yellow">👥</div><div class="stat-info"><div class="stat-value">{{ clientes_ativos }}</div><div class="stat-label">Clientes Ativos</div></div></div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+  <div class="chart-card">
+    <h3>📊 Empresas por Situação</h3>
+    <div id="chart-empresas"></div>
+  </div>
+  <div class="chart-card">
+    <h3>💰 Resumo Financeiro</h3>
+    <div id="chart-financeiro"></div>
+    <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="fin-card"><div class="fin-label">Receitas</div><div class="fin-value fin-green">R$ {{ "%.2f"|format(receitas_total) }}</div></div>
+      <div class="fin-card"><div class="fin-label">Despesas</div><div class="fin-value fin-red">R$ {{ "%.2f"|format(despesas_total) }}</div></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  renderBarChart('chart-empresas',
+    ['Total','Ativas','Inativas'],
+    [{{ empresas_total }}, {{ empresas_ativas }}, {{ empresas_total - empresas_ativas }}],
+    '#6b9e8c'
+  );
+  renderBarChart('chart-financeiro',
+    ['Receitas','Despesas','Saldo'],
+    [{{ receitas_total }}, {{ despesas_total }}, {{ receitas_total - despesas_total }}],
+    '#2563eb'
+  );
+});
+</script>
+{% endblock %}

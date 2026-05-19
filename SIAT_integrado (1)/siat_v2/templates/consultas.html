@@ -1,0 +1,56 @@
+{# templates/consultas.html #}
+{% extends "base.html" %}
+{% block title %}Consultas{% endblock %}
+{% block page_title %}Consultas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>🔍 Consultas</h1>
+  <p>Consulte CNPJ diretamente da Receita Federal via BrasilAPI</p>
+</div>
+
+{# Formulário de consulta #}
+<div class="card">
+  <h3>Consultar CNPJ</h3>
+  <form id="consulta-form" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+    <div class="field-group" style="flex:1;min-width:220px">
+      <label class="field-label">CNPJ</label>
+      <input type="text" id="doc-input" class="field-input cnpj-input" data-mask="cnpj"
+             placeholder="00.000.000/0001-00" maxlength="18" required>
+    </div>
+    <button type="submit" class="btn btn-primary">🔍 Consultar</button>
+  </form>
+  <div id="consulta-result" style="margin-top:8px"></div>
+</div>
+
+{# Histórico #}
+<div class="table-card">
+  <div class="table-card-header">
+    <h3>📋 Histórico de Consultas</h3>
+    <div class="search-bar" style="width:240px">
+      <input type="text" id="search-input" placeholder="Filtrar...">
+      <button>🔍</button>
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table id="main-table">
+      <thead>
+        <tr><th>Tipo</th><th>Documento</th><th>Empresa</th><th>Resultado</th><th>Data</th></tr>
+      </thead>
+      <tbody>
+        {% for c in historico %}
+        <tr>
+          <td><span class="badge badge-blue">{{ c.tipo }}</span></td>
+          <td style="font-family:monospace">{{ c.documento }}</td>
+          <td>{{ c.razao_social or '—' }}</td>
+          <td><span class="badge {{ 'badge-green' if c.resultado=='Encontrado' else 'badge-red' }}">{{ c.resultado }}</span></td>
+          <td>{{ c.data_consulta.strftime('%d/%m/%Y %H:%M') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px">Nenhuma consulta ainda.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

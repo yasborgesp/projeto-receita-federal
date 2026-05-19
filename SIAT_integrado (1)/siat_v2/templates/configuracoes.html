@@ -1,0 +1,48 @@
+{# templates/configuracoes.html #}
+{% extends "base.html" %}
+{% block title %}Configurações{% endblock %}
+{% block page_title %}Configurações{% endblock %}
+{% block content %}
+<div class="page-header"><h1>⚙️ Configurações</h1><p>Gerencie os dados da sua conta</p></div>
+
+<div class="card" style="max-width:520px">
+  <h3>Dados da Conta</h3>
+  <form method="POST" action="{{ url_for('config.atualizar') }}">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="field-group">
+        <label class="field-label">Nome</label>
+        <input type="text" name="nome" class="field-input" value="{{ admin.nome }}" required>
+      </div>
+      <div class="field-group">
+        <label class="field-label">E-mail</label>
+        <input type="email" name="email" class="field-input" value="{{ admin.email }}" required>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Nova Senha (deixe em branco para manter)</label>
+        <input type="password" name="nova_senha" class="field-input" placeholder="••••••••">
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button type="submit" class="btn btn-primary">💾 Salvar alterações</button>
+        <a href="{{ url_for('dashboard.index') }}" class="btn btn-ghost">Cancelar</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="card" style="max-width:520px;margin-top:0">
+  <h3>Informações do Sistema</h3>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div class="result-field"><div class="result-field-label">Versão</div><div class="result-field-value">SIAT 1.0 · Projeto Acadêmico</div></div>
+    <div class="result-field"><div class="result-field-label">API</div><div class="result-field-value">BrasilAPI · Receita Federal</div></div>
+    <div class="result-field"><div class="result-field-label">Banco de Dados</div><div class="result-field-value">SQLite + SQLAlchemy</div></div>
+    <div class="result-field"><div class="result-field-label">Backend</div><div class="result-field-value">Python Flask</div></div>
+    <div class="result-field"><div class="result-field-label">Instituição</div><div class="result-field-value">Centro Universitário UniFatecie</div></div>
+  </div>
+</div>
+
+<div class="card" style="max-width:520px;margin-top:0">
+  <h3 style="color:#dc2626">Zona de Perigo</h3>
+  <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:12px">Encerrar a sessão atual do sistema.</p>
+  <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">🚪 Sair do Sistema</a>
+</div>
+{% endblock %}

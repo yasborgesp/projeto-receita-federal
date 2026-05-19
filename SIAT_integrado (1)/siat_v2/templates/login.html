@@ -1,0 +1,62 @@
+{# templates/login.html — Tela de Login #}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login · SIAT</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body style="background:var(--bg)">
+
+<div class="login-page">
+  <div class="login-container">
+
+    {# Lado esquerdo — imagem/visual #}
+    <div class="login-image">
+      <div class="login-image-overlay"></div>
+      <div class="login-image-content">
+        <h2>Sistema Inteligente de Análise Tributária</h2>
+        <p>A contabilidade moderna, integrada à Receita Federal e pensada para o contador do futuro.</p>
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+          <span style="background:rgba(255,255,255,.15);color:white;padding:6px 14px;border-radius:99px;font-size:.8rem">📊 Dashboard</span>
+          <span style="background:rgba(255,255,255,.15);color:white;padding:6px 14px;border-radius:99px;font-size:.8rem">🔍 Consulta CNPJ</span>
+          <span style="background:rgba(255,255,255,.15);color:white;padding:6px 14px;border-radius:99px;font-size:.8rem">💰 Financeiro</span>
+        </div>
+      </div>
+    </div>
+
+    {# Lado direito — formulário #}
+    <div class="login-form-area">
+      <h1>AUTENTICAÇÃO</h1>
+
+      {% with msgs = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in msgs %}
+          <div class="flash-error">{{ msg }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('auth.login') }}">
+        <div class="form-group">
+          <label class="form-label">EMAIL</label>
+          <input type="email" name="email" class="form-input" required autocomplete="email" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">SENHA</label>
+          <input type="password" name="senha" class="form-input" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-login">ACESSAR</button>
+        <p class="login-disclaimer">Seus dados são protegidos e criptografados. Nunca compartilhe sua senha.</p>
+      </form>
+
+      <div style="margin-top:20px;text-align:center">
+        <a href="{{ url_for('landing.index') }}" style="font-size:.82rem;color:var(--blue-dark);opacity:.7">← Voltar ao início</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

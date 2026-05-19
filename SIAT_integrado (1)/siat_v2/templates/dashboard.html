@@ -1,0 +1,110 @@
+{# templates/dashboard.html #}
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Bem-vindo, {{ admin_nome }}! 👋</h1>
+  <p>Resumo geral do sistema · {{ now if now else '' }}</p>
+</div>
+
+{# Cards de métricas #}
+<div class="cards-grid">
+  <div class="stat-card">
+    <div class="stat-icon si-blue">🏢</div>
+    <div class="stat-info">
+      <div class="stat-value">{{ total_empresas }}</div>
+      <div class="stat-label">Empresas Cadastradas</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-teal">👥</div>
+    <div class="stat-info">
+      <div class="stat-value">{{ total_clientes }}</div>
+      <div class="stat-label">Clientes Ativos</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-green">🔍</div>
+    <div class="stat-info">
+      <div class="stat-value">{{ total_consultas }}</div>
+      <div class="stat-label">Consultas Realizadas</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-yellow">✅</div>
+    <div class="stat-info">
+      <div class="stat-value">{{ empresas_ativas }}</div>
+      <div class="stat-label">Empresas Ativas</div>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+  {# Gráfico #}
+  <div class="chart-card">
+    <h3>📊 Visão Geral</h3>
+    <div id="grafico-geral"></div>
+  </div>
+
+  {# Ações rápidas #}
+  <div class="card">
+    <h3>⚡ Ações Rápidas</h3>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+      <a href="{{ url_for('consultas.index') }}" class="btn btn-primary">🔍 Nova Consulta CNPJ</a>
+      <a href="{{ url_for('empresas.index') }}" class="btn btn-teal">🏢 Cadastrar Empresa</a>
+      <a href="{{ url_for('clientes.index') }}" class="btn btn-ghost">👤 Novo Cliente</a>
+      <a href="{{ url_for('relatorios.index') }}" class="btn btn-ghost">📈 Ver Relatórios</a>
+    </div>
+  </div>
+
+</div>
+
+{# Consultas recentes #}
+<div class="table-card" style="margin-top:20px">
+  <div class="table-card-header">
+    <h3>🕘 Consultas Recentes</h3>
+    <a href="{{ url_for('consultas.index') }}" class="btn btn-ghost btn-sm">Ver todas</a>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th><th>Documento</th><th>Empresa</th><th>Resultado</th><th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in recentes %}
+        <tr>
+          <td><span class="badge badge-blue">{{ c.tipo }}</span></td>
+          <td style="font-family:monospace">{{ c.documento }}</td>
+          <td>{{ c.razao_social or '—' }}</td>
+          <td>
+            <span class="badge {{ 'badge-green' if c.resultado == 'Encontrado' else 'badge-red' }}">
+              {{ c.resultado }}
+            </span>
+          </td>
+          <td>{{ c.data_consulta.strftime('%d/%m/%Y %H:%M') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px">Nenhuma consulta realizada ainda.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    renderBarChart('grafico-geral',
+      ['Empresas','Clientes','Consultas','Ativas'],
+      [{{ total_empresas }}, {{ total_clientes }}, {{ total_consultas }}, {{ empresas_ativas }}],
+      '#2563eb'
+    );
+  });
+</script>
+{% endblock %}

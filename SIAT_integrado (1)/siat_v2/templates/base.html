@@ -1,0 +1,85 @@
+{# templates/base.html — Layout base do sistema #}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SIAT{% endblock %} · Sistema Inteligente de Análise Tributária</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-layout">
+
+  {# ── Sidebar ── #}
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo-icon">S</div>
+      <div class="sidebar-logo-text">SIAT<span>Análise Tributária</span></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu Principal</div>
+
+      <a href="{{ url_for('dashboard.index') }}" class="nav-item {% if request.blueprint == 'dashboard' %}active{% endif %}">
+        <span class="icon">📊</span><span>Dashboard</span>
+      </a>
+      <a href="{{ url_for('empresas.index') }}" class="nav-item {% if request.blueprint == 'empresas' %}active{% endif %}">
+        <span class="icon">🏢</span><span>Empresas</span>
+      </a>
+      <a href="{{ url_for('clientes.index') }}" class="nav-item {% if request.blueprint == 'clientes' %}active{% endif %}">
+        <span class="icon">👥</span><span>Clientes</span>
+      </a>
+      <a href="{{ url_for('consultas.index') }}" class="nav-item {% if request.blueprint == 'consultas' %}active{% endif %}">
+        <span class="icon">🔍</span><span>Consultas</span>
+      </a>
+
+      <hr class="sidebar-divider">
+      <div class="nav-section-label">Gestão</div>
+
+      <a href="{{ url_for('financeiro.index') }}" class="nav-item {% if request.blueprint == 'financeiro' %}active{% endif %}">
+        <span class="icon">💰</span><span>Financeiro</span>
+      </a>
+      <a href="{{ url_for('relatorios.index') }}" class="nav-item {% if request.blueprint == 'relatorios' %}active{% endif %}">
+        <span class="icon">📈</span><span>Relatórios</span>
+      </a>
+
+      <hr class="sidebar-divider">
+      <div class="nav-section-label">Sistema</div>
+
+      <a href="{{ url_for('config.index') }}" class="nav-item {% if request.blueprint == 'config' %}active{% endif %}">
+        <span class="icon">⚙️</span><span>Configurações</span>
+      </a>
+      <a href="{{ url_for('auth.logout') }}" class="nav-item">
+        <span class="icon">🚪</span><span>Sair</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ admin_nome[0]|upper if admin_nome else 'A' }}</div>
+      <div class="user-info">
+        <div class="user-name">{{ admin_nome }}</div>
+        <div class="user-role">Administrador</div>
+      </div>
+    </div>
+  </aside>
+
+  {# ── Conteúdo principal ── #}
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">{% block page_title %}{% endblock %}</div>
+      <div class="topbar-actions">
+        <span style="font-size:.82rem;color:var(--text-muted)">Receita Federal · BrasilAPI</span>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

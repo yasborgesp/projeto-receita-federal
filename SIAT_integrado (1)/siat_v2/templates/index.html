@@ -1,0 +1,146 @@
+{# templates/index.html — Landing Page #}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Inteligente de Análise Tributária</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+{# ── Nav ── #}
+<nav class="landing-nav">
+  <div class="logo">
+    <div class="logo-icon">S</div>
+    Sistema Inteligente de Análise Tributária
+  </div>
+  <div class="nav-links">
+    <a href="#planos" class="nav-link">Planos/Serviços</a>
+    <a href="#sobre" class="nav-link">Sobre Nós</a>
+  </div>
+  <div class="nav-btns">
+    <a href="{{ url_for('auth.login') }}" class="btn-outline">LOGIN</a>
+    <a href="{{ url_for('auth.login') }}" class="btn-solid">CADASTRE-SE</a>
+  </div>
+</nav>
+
+{# ── Hero ── #}
+<section class="hero">
+  <div class="hero-content">
+    <h1>A contabilidade<br><span>que oferece mais!</span></h1>
+    <p>Consulte CNPJs, gerencie clientes e empresas, analise dados tributários — tudo em um único sistema moderno e integrado à Receita Federal.</p>
+    <div class="hero-btns">
+      <a href="{{ url_for('auth.login') }}" class="btn-hero-primary">Acessar o Sistema</a>
+      <a href="#planos" class="btn-hero-secondary">Ver Planos</a>
+    </div>
+  </div>
+</section>
+
+{# ── Nav de seções ── #}
+<div class="section-nav">
+  <a href="#planos" class="active">PLANOS/SERVIÇOS</a>
+  <a href="#sobre">SOBRE NÓS</a>
+</div>
+
+{# ── Features ── #}
+<section class="features">
+  <h2>3 motivos para você migrar para<br><span>Sistema Inteligente de Análise Tributária</span></h2>
+  <p class="features-sub">A solução completa para escritórios contábeis modernos</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🏛️</div>
+      <h3>Integração com a Receita Federal</h3>
+      <p>Consulte dados cadastrais de qualquer CNPJ em tempo real, direto da Receita Federal via BrasilAPI.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Histórico e controle total</h3>
+      <p>Registre e acompanhe todas as consultas, clientes e empresas com histórico completo e rastreável.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Dashboard profissional</h3>
+      <p>Visualize indicadores, gráficos e relatórios gerenciais em um painel moderno e intuitivo.</p>
+    </div>
+  </div>
+</section>
+
+{# ── Planos ── #}
+<section id="planos" style="padding:80px 40px; background:var(--bg); text-align:center;">
+  <h2 style="font-size:2rem; font-weight:700; color:var(--text); margin-bottom:10px;">PLANOS/SERVIÇOS</h2>
+  <p style="font-size:.95rem; color:var(--text-muted); margin-bottom:44px;">Escolha o plano ideal para o seu escritório contábil</p>
+
+  <div style="max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:14px;">
+    <div class="plano-row">
+      <span class="plano-nome" style="font-size:1.1rem;">Essencial</span>
+      <span class="plano-preco" style="font-size:1.1rem;">R$ 29/mês</span>
+      <button class="plano-btn" style="padding:10px 28px; font-size:.95rem;"
+              onclick="location.href='{{ url_for('auth.login') }}'">Começar agora</button>
+    </div>
+    <div class="plano-row">
+      <span class="plano-nome" style="font-size:1.1rem;">Corporativo</span>
+      <span class="plano-preco" style="font-size:1.1rem;">R$ 79/mês</span>
+      <button class="plano-btn" style="padding:10px 28px; font-size:.95rem;"
+              onclick="location.href='{{ url_for('auth.login') }}'">Começar agora</button>
+    </div>
+    <div class="plano-row">
+      <span class="plano-nome" style="font-size:1.1rem;">Profissional</span>
+      <span class="plano-preco" style="font-size:1.1rem;">R$ 239/mês</span>
+      <button class="plano-btn" style="padding:10px 28px; font-size:.95rem;"
+              onclick="location.href='{{ url_for('auth.login') }}'">Começar agora</button>
+    </div>
+  </div>
+</section>
+
+{# ── Sobre Nós ── #}
+<section id="sobre" style="padding:80px 40px; background:var(--white);">
+  <div style="max-width:960px; margin:0 auto; display:flex; justify-content:flex-end;">
+    <div class="sobre-text" style="max-width:520px; width:100%;">
+      <h2 style="font-size:1.7rem;">SOBRE NÓS</h2>
+      <p style="font-size:.95rem; line-height:1.8; margin-bottom:16px;">
+        O Sistema Inteligente de Análise Tributária nasceu da necessidade de modernizar a contabilidade
+        brasileira. Nossa plataforma integra tecnologia de ponta com as exigências do ambiente tributário
+        nacional.
+      </p>
+      <p style="font-size:.95rem; line-height:1.8;">
+        Com integração direta à Receita Federal, proporcionamos aos contadores uma ferramenta ágil,
+        segura e completa para gerenciar seus clientes e empresas com eficiência e precisão.
+      </p>
+    </div>
+  </div>
+</section>
+
+{# ── Contato ── #}
+<section id="contato" style="padding:80px 40px; background:var(--bg);">
+  <div style="max-width:560px; margin:0 auto; text-align:center;">
+    <h2 style="font-size:1.8rem; font-weight:700; color:var(--teal-dark); margin-bottom:8px;">Contact us</h2>
+    <p style="font-size:.9rem; color:var(--text-muted); margin-bottom:32px;">
+      Entre em contato com nossa equipe
+    </p>
+    <form class="contact-form" style="text-align:left;">
+      <div>
+        <label style="font-size:.8rem; color:var(--text-muted); display:block; margin-bottom:5px;">Name</label>
+        <input type="text" placeholder="">
+      </div>
+      <div>
+        <label style="font-size:.8rem; color:var(--text-muted); display:block; margin-bottom:5px;">Email address</label>
+        <input type="email" placeholder="">
+      </div>
+      <div>
+        <label style="font-size:.8rem; color:var(--text-muted); display:block; margin-bottom:5px;">Leave a message</label>
+        <textarea rows="4"></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Submit</button>
+    </form>
+  </div>
+</section>
+
+<footer class="landing-footer">
+  © 2025 Sistema Inteligente de Análise Tributária · Projeto Acadêmico · UniFatecie
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

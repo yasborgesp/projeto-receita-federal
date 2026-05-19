@@ -1,0 +1,162 @@
+{# templates/empresas.html — integrado com banco normalizado do parceiro #}
+{% extends "base.html" %}
+{% block title %}Empresas{% endblock %}
+{% block page_title %}Empresas{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+  <div><h1>🏢 Empresas</h1><p>Gerencie as empresas cadastradas no banco de dados</p></div>
+  <button class="btn btn-primary" onclick="openModal('modal-empresa')">+ Nova Empresa</button>
+</div>
+
+{# Busca + consulta rápida CNPJ #}
+<div class="card" style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+  <form method="GET" style="display:flex;gap:10px;flex:1">
+    <div class="search-bar" style="flex:1">
+      <input type="text" name="q" value="{{ q }}" placeholder="Pesquisar por CNPJ ou razão social...">
+      <button type="submit">🔍</button>
+    </div>
+  </form>
+  <div style="display:flex;gap:8px;align-items:center">
+    <input type="text" id="cnpj-buscar" class="field-input cnpj-input" data-mask="cnpj"
+           placeholder="CNPJ para consultar API" style="width:210px">
+    <button class="btn btn-teal" onclick="buscarEmpresaCNPJ()">🔍 Consultar API</button>
+  </div>
+</div>
+<div id="result-empresa" style="margin-top:4px"></div>
+
+{# Tabela #}
+<div class="table-card">
+  <div class="table-card-header">
+    <h3>Empresas Cadastradas ({{ empresas|length }})</h3>
+  </div>
+  <div class="table-wrapper">
+    <table id="main-table">
+      <thead>
+        <tr>
+          <th>CNPJ</th>
+          <th>Razão Social</th>
+          <th>Nome Fantasia</th>
+          <th>Situação</th>
+          <th>Regime Tributário</th>
+          <th>CNAE</th>
+          <th>Município/UF</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in empresas %}
+        <tr>
+          <td style="font-family:monospace;font-size:.8rem">{{ e.cnpj_formatado }}</td>
+          <td>{{ e.razao_social or '—' }}</td>
+          <td>{{ e.nome_fantasia or '—' }}</td>
+          <td>
+            <span class="badge {{ 'badge-green' if e.situacao=='ATIVA' else 'badge-red' if e.situacao else 'badge-gray' }}">
+              {{ e.situacao or '—' }}
+            </span>
+          </td>
+          <td>{{ e.regime_tributario.tributacao if e.regime_tributario else '—' }}</td>
+          <td>{{ e.cnae.codigo if e.cnae else '—' }}</td>
+          <td>{{ e.municipio or (e.endereco.cidade if e.endereco else '—') }}{% if e.uf %}/{{ e.uf }}{% endif %}</td>
+          <td>
+            <form method="POST" action="{{ url_for('empresas.deletar', id=e.id) }}" style="display:inline"
+                  onsubmit="return confirm('Excluir esta empresa?')">
+              <button class="btn btn-danger btn-sm">🗑</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:28px">
+          Nenhuma empresa cadastrada.
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{# Modal cadastro manual #}
+<div id="modal-empresa" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Cadastrar Empresa</h2>
+      <button class="modal-close" onclick="closeModal('modal-empresa')">✕</button>
+    </div>
+    <form method="POST" action="{{ url_for('empresas.cadastrar') }}">
+      <div class="form-grid">
+        <div class="field-group">
+          <label class="field-label">CNPJ *</label>
+          <input type="text" name="cnpj" class="field-input cnpj-input" data-mask="cnpj" required maxlength="18">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Razão Social</label>
+          <input type="text" name="razao_social" class="field-input">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Nome Fantasia</label>
+          <input type="text" name="nome_fantasia" class="field-input">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Situação</label>
+          <select name="situacao" class="field-select">
+            <option value="ATIVA">ATIVA</option>
+            <option value="INATIVA">INATIVA</option>
+            <option value="SUSPENSA">SUSPENSA</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Regime Tributário</label>
+          <select name="regime_tributario_id" class="field-select">
+            <option value="">Selecione...</option>
+            {% for r in regimes %}
+            <option value="{{ r.id }}">{{ r.tributacao }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">CNAE (código)</label>
+          <input type="text" name="cnae" class="field-input" placeholder="Ex: 6202">
+        </div>
+
+        <div style="grid-column:1/-1">
+          <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
+          <p style="font-size:.75rem;color:var(--text-muted);margin-bottom:10px">Endereço</p>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Cidade</label>
+          <input type="text" name="cidade" class="field-input">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Rua</label>
+          <input type="text" name="rua" class="field-input">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Número</label>
+          <input type="text" name="numero" class="field-input" style="width:100px">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Bairro</label>
+          <input type="text" name="bairro" class="field-input">
+        </div>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-empresa')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function buscarEmpresaCNPJ() {
+  const cnpj = document.getElementById('cnpj-buscar').value;
+  await consultarCNPJ(cnpj, 'result-empresa');
+}
+document.getElementById('cnpj-buscar')?.addEventListener('keypress', e => {
+  if (e.key === 'Enter') buscarEmpresaCNPJ();
+});
+</script>
+{% endblock %}
