@@ -272,4 +272,4 @@ Este projeto demonstra na prática os seguintes conceitos da disciplina:
 
 ## 📄 Licença
 
-Projeto desenvolvido para fins **acadêmicos** na disciplina de Desenvolvimento Rápido de Aplicações em Python — Centro Universitário UniFatecie, Paranavaí/PR.
+Projeto desenvolvido para fins **acadêmicos** na disciplina de Desenvolvimento Rápido de Aplicações em Python
